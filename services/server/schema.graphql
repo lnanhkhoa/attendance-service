@@ -222,7 +222,7 @@ type Attendance {
   type: String
   temperature: Float
   capturePhotoUrl: String
-  user: School
+  user: User
   school: School
   createdAt: DateTime
   updatedAt: DateTime
@@ -240,7 +240,7 @@ input AttendanceWhereInput {
   type: StringNullableFilter
   temperature: FloatNullableFilter
   capturePhotoUrl: StringFilter
-  user: SchoolWhereInput
+  user: UserWhereInput
   school: SchoolWhereInput
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
@@ -299,10 +299,16 @@ input AttendanceUpdateInput {
   type: String
   temperature: Float
   capturePhotoUrl: String
-  user: SchoolRelateToOneForUpdateInput
+  user: UserRelateToOneForUpdateInput
   school: SchoolRelateToOneForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
+}
+
+input UserRelateToOneForUpdateInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+  disconnect: Boolean
 }
 
 input AttendanceUpdateArgs {
@@ -314,10 +320,15 @@ input AttendanceCreateInput {
   type: String
   temperature: Float
   capturePhotoUrl: String
-  user: SchoolRelateToOneForCreateInput
+  user: UserRelateToOneForCreateInput
   school: SchoolRelateToOneForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
+}
+
+input UserRelateToOneForCreateInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
 }
 
 """

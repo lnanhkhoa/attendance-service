@@ -1,11 +1,50 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Link from "next/link";
 
 // layout for page
 
 import Auth from "@/layouts/auth";
+import { useMutation } from "@apollo/client";
+import { MUTATION_SIGN_IN } from "@/graphql/gql";
+import { zodPageSchema } from "@/utils/form-validate";
+import { DEV_SYSTEM_PASS, DEV_SYSTEM_USER } from "@/utils/constants";
+import { Field, Form } from "react-final-form";
+import { debounce, get } from "lodash";
+import { toast } from "react-toastify";
+import MyTextInput from "@/components/Form/MyTextInput";
+import { useRouter } from "next/router";
+import { useAuthStore } from "@/store/useAuthStore";
+
+const initialValues = {
+  email: DEV_SYSTEM_USER,
+  password: DEV_SYSTEM_PASS,
+};
 
 export default function Login() {
+  const router = useRouter();
+  const { login } = useAuthStore();
+  const validate = useCallback((values: typeof initialValues) => zodPageSchema(values, "login"), []);
+  const [loginMutate, { called, loading, error }] = useMutation(MUTATION_SIGN_IN, {
+    onCompleted(data) {
+      const accessToken = get(data, ["authenticateUserWithPassword", "item", "sessionToken"], "");
+      login(accessToken);
+      router.replace("/admin/dashboard");
+      return true;
+    },
+    onError: (err) => toast(err.message, { type: "error" }),
+  });
+
+  function onSubmit(values: typeof initialValues) {
+    return debounce(() => {
+      return loginMutate({
+        variables: {
+          email: values.email,
+          password: values.password,
+        },
+      });
+    }, 1000)();
+  }
+
   return (
     <>
       <Auth>
@@ -37,57 +76,51 @@ export default function Login() {
                   <div className="text-slate-400 text-center mb-3 font-bold">
                     <small>Or sign in with credentials</small>
                   </div>
-                  <form>
-                    <div className="relative w-full mb-3">
-                      <label className="block uppercase text-slate-600 text-xs font-bold mb-2" htmlFor="grid-password">
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        className="border-0 px-3 py-3 placeholder-slate-300 text-slate-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                        placeholder="Email"
-                      />
-                    </div>
+                  <Form
+                    onSubmit={onSubmit}
+                    initialValues={initialValues}
+                    validate={validate}
+                    render={({ handleSubmit, form, submitting, pristine, values, errors }) => (
+                      <form onSubmit={handleSubmit}>
+                        <div className="relative w-full mb-3">
+                          <MyTextInput name="email" placeholder="email" type="email" label="Email" />
+                        </div>
+                        <div className="relative w-full mb-3">
+                          <MyTextInput name="password" placeholder="email" type="password" label="Password" />
+                        </div>
+                        <div>
+                          <label className="inline-flex items-center cursor-pointer">
+                            <input
+                              id="customCheckLogin"
+                              type="checkbox"
+                              className="form-checkbox border-0 rounded text-slate-700 ml-1 w-5 h-5 ease-linear transition-all duration-150"
+                            />
+                            <span className="ml-2 text-sm font-semibold text-slate-600">Remember me</span>
+                          </label>
+                        </div>
 
-                    <div className="relative w-full mb-3">
-                      <label className="block uppercase text-slate-600 text-xs font-bold mb-2" htmlFor="grid-password">
-                        Password
-                      </label>
-                      <input
-                        type="password"
-                        className="border-0 px-3 py-3 placeholder-slate-300 text-slate-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                        placeholder="Password"
-                      />
-                    </div>
-                    <div>
-                      <label className="inline-flex items-center cursor-pointer">
-                        <input
-                          id="customCheckLogin"
-                          type="checkbox"
-                          className="form-checkbox border-0 rounded text-slate-700 ml-1 w-5 h-5 ease-linear transition-all duration-150"
-                        />
-                        <span className="ml-2 text-sm font-semibold text-slate-600">Remember me</span>
-                      </label>
-                    </div>
-
-                    <div className="text-center mt-6">
-                      <button
-                        className="bg-slate-800 text-white active:bg-slate-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                        type="button">
-                        Sign In
-                      </button>
-                    </div>
-                  </form>
+                        <div className="text-center mt-6">
+                          <button
+                            disabled={submitting || loading}
+                            className="bg-slate-800 text-white active:bg-slate-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                            type="submit">
+                            {submitting || loading ? <i className="fas fa-spinner mr-2"></i> : null}
+                            Sign In
+                          </button>
+                        </div>
+                      </form>
+                    )}
+                  />
                 </div>
               </div>
               <div className="flex flex-wrap mt-6 relative">
                 <div className="w-1/2">
-                  <Link href="#pablo" onClick={(e) => e.preventDefault()} legacyBehavior>
+                  <Link href="#" onClick={(e) => e.preventDefault()}>
                     <small className="text-slate-200">Forgot password?</small>
                   </Link>
                 </div>
                 <div className="w-1/2 text-right">
-                  <Link href="/auth/register" legacyBehavior>
+                  <Link href="/auth/register">
                     <small className="text-slate-200">Create new account</small>
                   </Link>
                 </div>

@@ -1,0 +1,163 @@
+.profile-main-loader{
+    width: 100%;
+}
+
+.profile-main-loader .loader {
+  position: relative;
+  margin: 0px auto;
+  width: 100px;
+  height:100px;
+}
+.profile-main-loader .loader:before {
+  content: '';
+  display: block;
+  padding-top: 100%;
+}
+
+.circular-loader {
+  -webkit-animation: rotate 2s linear infinite;
+          animation: rotate 2s linear infinite;
+  height: 100%;
+  -webkit-transform-origin: center center;
+      -ms-transform-origin: center center;
+          transform-origin: center center;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: auto;
+}
+
+.loader-path {
+  stroke-dasharray: 150,200;
+  stroke-dashoffset: -10;
+  -webkit-animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+          animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+  stroke-linecap: round;
+}
+
+.tableView tbody tr:hover td {
+  border-color: #418CD0;
+}
+
+.c-checkbox > input[type=checkbox]{
+  width: 26px; height: 26px;
+  cursor: pointer;
+  opacity: 0;
+  margin: 0;
+  appearance: none; -webkit-appearance: none;
+}
+.c-checkbox > div{
+  display: grid;
+  pointer-events: none;
+  /* transition: transform .6s cubic-bezier(.8, .5, .2, 1.4); */
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  transform-style: preserve-3d;
+}
+.c-checkbox > div > *{
+  grid-area: 1/1;
+}
+.c-checkbox > div > i:first-child{
+  background: #c6c3c3c2;
+  transform:  translatez( -10px );
+}
+.c-checkbox > div > i:last-child{
+  background: #fff;
+  transform:  translatez( 10px );
+}
+.c-checkbox > div > i:nth-of-type(2),
+.c-checkbox > div > i:nth-of-type(3){
+  height: 13px;
+  transform: rotatex(90deg)rotatey(90deg) ;
+  position: relative;
+  top: 6px;
+}
+.c-checkbox > div > i:nth-of-type(2){
+  background: navy;
+  right: 13px;
+}
+.c-checkbox > div > i:nth-of-type(3){
+  background: #FFFFFF;
+  left: 13px;
+}
+input:checked + div{ 
+  transform: rotatey( 180deg ); 
+}
+.c-checkbox{
+  display: grid;
+  width: 26px; height: 26px;
+}
+.c-checkbox > *{
+  grid-area: 1/1;
+}
+
+
+@-webkit-keyframes rotate {
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate {
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes dash {
+  0% {
+    stroke-dasharray: 1,200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89,200;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 89,200;
+    stroke-dashoffset: -124;
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1,200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89,200;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 89,200;
+    stroke-dashoffset: -124;
+  }
+}
+@-webkit-keyframes color {
+  0% {
+    stroke: #c6c3c3c2;
+  }
+  40% {
+    stroke: #c6c3c3c2;
+  }
+  66% {
+    stroke: #c6c3c3c2;
+  }
+  80%, 90% {
+    stroke: #c6c3c3c2;
+  }
+}
+@keyframes color {
+  0% {
+    stroke: #c6c3c3c2;
+  }
+  40% {
+    stroke: #c6c3c3c2;
+  }
+  66% {
+    stroke: #c6c3c3c2;
+  }
+  80%, 90% {
+    stroke: #c6c3c3c2;
+  }
+}

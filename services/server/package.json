@@ -7,7 +7,9 @@
     "dev:prepare": "yarn keystone build --no-ui && keystone prisma db push --accept-data-loss",
     "dev": "keystone dev",
     "start": "keystone start",
-    "build": "keystone build"
+    "build": "keystone build",
+    "migrate-dev": "keystone prisma migrate dev",
+    "migrate-reset": "keystone prisma migrate reset"
   },
   "dependencies": {
     "@keystone-6/auth": "7.0.0",

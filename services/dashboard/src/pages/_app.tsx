@@ -11,6 +11,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "react-toastify/dist/ReactToastify.css";
 // import "@/styles/global.css";
 import "@/styles/tailwind.css";
+import "@/styles/loader.css";
+import LoadingOverlay from "@/layouts/loading-overlay";
 
 export default function CustomApp({ Component, pageProps }) {
   const router = useRouter();

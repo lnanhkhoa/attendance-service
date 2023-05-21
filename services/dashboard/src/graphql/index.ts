@@ -1,10 +1,8 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { NEXT_PUBLIC_SERVER_URL } from "@/utils/constants";
 
-const NEXT_PUBLIC_LANDING_API_ENDPOINT =
-  process.env.NEXT_PUBLIC_LANDING_API_ENDPOINT || "http://localhost:4000/api/graphql";
-
-export const apiUri = NEXT_PUBLIC_LANDING_API_ENDPOINT;
+export const apiUri = NEXT_PUBLIC_SERVER_URL + "/api/graphql";
 export const apiOrigin = new URL(apiUri).origin;
 
 const httpLink = createHttpLink({

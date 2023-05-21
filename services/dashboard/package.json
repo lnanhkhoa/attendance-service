@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "@types/node": "20.2.1",
+    "@types/lodash": "4.14.194",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "@svgr/webpack": "^7.0.0",
+    "lodash": "4.17.21",
     "autoprefixer": "10.4.14",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.3",
@@ -26,14 +28,19 @@
     "typescript": "5.0.4",
     "@fortawesome/fontawesome-free": "6.4.0",
     "@popperjs/core": "2.11.7",
+    "react-popper": "2.3.0",
     "@tailwindcss/forms": "0.5.3",
     "@tailwindcss/typography": "^0.5.9",
+    "react-final-form": "6.5.9",
     "@apollo/client": "^3.7.14",
     "chart.js": "4.3.0",
     "react-chartjs-2": "^5.2.0",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8",
-    "react-toastify": "9.1.2"
+    "react-toastify": "9.1.2",
+    "zod": "3.21.4",
+    "clsx": "1.2.1",
+    "zustand": "4.3.7"
   },
   "browserslist": {
     "production": [

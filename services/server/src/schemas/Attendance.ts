@@ -13,7 +13,7 @@ const model = list({
     temperature: float({ defaultValue: 0 }),
     capturePhotoUrl: text({ defaultValue: "" }),
     // relationship
-    user: relationship({ many: false, ref: "School" }),
+    user: relationship({ many: false, ref: "User" }),
     school: relationship({ many: false, ref: "School" }),
 
     // create-update

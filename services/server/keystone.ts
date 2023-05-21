@@ -15,10 +15,12 @@ export default withAuth(
     lists: schemas,
     session,
     server: {
+      port: 4000,
       healthCheck: {
         path: "/status",
         data: { status: "healthy" },
       },
+      cors: { origin: "*" },
     },
     graphql: {
       apolloConfig: {

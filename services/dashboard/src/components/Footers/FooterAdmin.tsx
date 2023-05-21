@@ -1,6 +1,8 @@
+import { useAuthStore } from "@/store/useAuthStore";
 import React from "react";
 
 export default function FooterAdmin() {
+  const {logout} = useAuthStore()
   return (
     <>
       <footer className="block py-4">
@@ -45,12 +47,13 @@ export default function FooterAdmin() {
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="https://github.com/creativetimofficial/notus-nextjs/blob/main/LICENSE.md?ref=nnjs-footer-admin"
+                  <button
+                    // href="https://github.com/creativetimofficial/notus-nextjs/blob/main/LICENSE.md?ref=nnjs-footer-admin"
+                    onClick={logout}
                     className="text-slate-600 hover:text-slate-800 text-sm font-semibold block py-1 px-3"
                   >
                     MIT License
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>

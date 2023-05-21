@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 import NotificationDropdown from "@/components/Dropdowns/NotificationDropdown";
 import UserDropdown from "@/components/Dropdowns/UserDropdown";
+import clsx from "clsx";
 
 export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
@@ -36,10 +37,10 @@ export default function Sidebar() {
           </ul>
           {/* Collapse */}
           <div
-            className={
-              "md:flex md:flex-col md:items-stretch md:opacity-100 md:relative md:mt-4 md:shadow-none shadow absolute top-0 left-0 right-0 z-40 overflow-y-auto overflow-x-hidden h-auto items-center flex-1 rounded " +
-              collapseShow
-            }>
+            className={clsx(
+              "md:flex md:flex-col md:items-stretch md:opacity-100 md:relative md:mt-4 md:shadow-none shadow absolute top-0 left-0 right-0 z-40 overflow-y-auto overflow-x-hidden h-auto items-center flex-1 rounded",
+              collapseShow,
+            )}>
             {/* Collapse header */}
             <div className="md:min-w-full md:hidden block pb-4 mb-4 border-b border-solid border-slate-200">
               <div className="flex flex-wrap">
@@ -131,58 +132,6 @@ export default function Sidebar() {
                       (router.pathname.indexOf("/admin/tables") !== -1 ? "opacity-75" : "text-slate-300")
                     }></i>{" "}
                   Tables
-                </Link>
-              </li>
-            </ul>
-
-            {/* Divider */}
-            <hr className="my-4 md:min-w-full" />
-            {/* Heading */}
-            <h6 className="md:min-w-full text-slate-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-              Auth Layout Pages
-            </h6>
-            {/* Navigation */}
-
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
-              <li className="items-center">
-                <Link
-                  href="/auth/login"
-                  className="text-slate-700 hover:text-slate-500 text-xs uppercase py-3 font-bold block">
-                  <i className="fas fa-fingerprint text-slate-400 mr-2 text-sm"></i> Login
-                </Link>
-              </li>
-
-              <li className="items-center">
-                <Link
-                  href="/auth/register"
-                  className="text-slate-700 hover:text-slate-500 text-xs uppercase py-3 font-bold block">
-                  <i className="fas fa-clipboard-list text-slate-300 mr-2 text-sm"></i> Register
-                </Link>
-              </li>
-            </ul>
-
-            {/* Divider */}
-            <hr className="my-4 md:min-w-full" />
-            {/* Heading */}
-            <h6 className="md:min-w-full text-slate-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-              No Layout Pages
-            </h6>
-            {/* Navigation */}
-
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
-              <li className="items-center">
-                <Link
-                  href="/landing"
-                  className="text-slate-700 hover:text-slate-500 text-xs uppercase py-3 font-bold block">
-                  <i className="fas fa-newspaper text-slate-400 mr-2 text-sm"></i> Landing Page
-                </Link>
-              </li>
-
-              <li className="items-center">
-                <Link
-                  href="/profile"
-                  className="text-slate-700 hover:text-slate-500 text-xs uppercase py-3 font-bold block">
-                  <i className="fas fa-user-circle text-slate-400 mr-2 text-sm"></i> Profile Page
                 </Link>
               </li>
             </ul>
