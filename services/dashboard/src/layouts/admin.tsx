@@ -7,11 +7,11 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import HeaderStats from "@/components/Headers/HeaderStats";
 import FooterAdmin from "@/components/Footers/FooterAdmin";
 
-export default function Admin({ children }) {
+export default function Admin({ children }: any) {
   return (
     <>
       <Sidebar />
-      <div className="relative md:ml-64 bg-blueGray-100">
+      <div className="relative md:ml-64 bg-slate-100">
         <AdminNavbar />
         {/* Header */}
         <HeaderStats />

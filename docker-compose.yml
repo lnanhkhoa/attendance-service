@@ -47,18 +47,6 @@ services:
       - ${DASHBOARD_PORT}:4001
     command: /bin/sh -c "pnpm nx run dashboard:dev"
 
-  webapp:
-    image: webapp:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: webapp
-    environment:
-      NEXT_TELEMETRY_DISABLED: 1
-    ports:
-      - ${WEBAPP_PORT}:4002
-    command: /bin/sh -c "pnpm nx run webapp:dev"
-
 networks:
   default:
     name: attendance-system

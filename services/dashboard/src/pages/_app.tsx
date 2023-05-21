@@ -1,4 +1,3 @@
-import { Open_Sans } from "next/font/google";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Router from "next/router";
@@ -9,14 +8,9 @@ import { client } from "@/graphql";
 
 //
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import "@/styles/tailwind.css";
-import "@/styles/global.css";
 import "react-toastify/dist/ReactToastify.css";
-
-const roboto = Open_Sans({
-  weight: "400",
-  subsets: ["latin"],
-});
+// import "@/styles/global.css";
+import "@/styles/tailwind.css";
 
 export default function CustomApp({ Component, pageProps }) {
   const router = useRouter();
@@ -31,7 +25,7 @@ export default function CustomApp({ Component, pageProps }) {
         <title>Attendance System</title>
         <link rel="icon" type="image/png" href="/favicon.png"></link>
       </Head>
-      <main className={roboto.className}>
+      <main>
         <Component {...pageProps} />
         <ToastContainer />
       </main>

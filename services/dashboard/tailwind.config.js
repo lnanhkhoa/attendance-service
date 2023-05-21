@@ -4,25 +4,8 @@ const plugin = require("tailwindcss/plugin");
 const colors = require("tailwindcss/colors");
 
 module.exports = {
-  content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
-  variants: [
-    "responsive",
-    "group-hover",
-    "focus-within",
-    "first",
-    "last",
-    "odd",
-    "even",
-    "hover",
-    "focus",
-    "active",
-    "visited",
-    "disabled",
-  ],
+  mode: "jit",
+  content: ["./public/**/*.html", "./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     colors: {
       ...colors,
@@ -84,16 +67,17 @@ module.exports = {
       backgroundSize: {
         full: "100%",
       },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
+      // backgroundImage: {
+      //   "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+      //   "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      // },
     },
   },
 
   plugins: [
+    require("@tailwindcss/typography"),
     require("@tailwindcss/forms"),
-    plugin(function ({ addComponents, theme }) {
+    plugin(function ({ addComponents, theme, addVariant }) {
       const screens = theme("screens", {});
       addComponents([
         {
@@ -134,6 +118,21 @@ module.exports = {
             },
           },
         },
+      ]);
+
+      addVariant([
+        "responsive",
+        "group-hover",
+        "focus-within",
+        "first",
+        "last",
+        "odd",
+        "even",
+        "hover",
+        "focus",
+        "active",
+        "visited",
+        "disabled",
       ]);
     }),
   ],

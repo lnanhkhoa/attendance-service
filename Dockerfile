@@ -31,9 +31,3 @@ FROM node-base:latest as dashboard
 WORKDIR /app
 COPY --from=build /app /app
 COPY services/dashboard services/dashboard
-
-# webapp
-FROM node-base:latest as webapp
-WORKDIR /app
-COPY --from=build /app /app
-COPY services/webapp services/webapp
