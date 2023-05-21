@@ -6,12 +6,15 @@
     "dev": "next dev -p 4001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm run build:tailwind && npm run dev",
+    "build:tailwind": "tailwind build styles/index.css -o styles/tailwind.css"
   },
   "dependencies": {
     "@types/node": "20.2.1",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
+    "@svgr/webpack": "^7.0.0",
     "autoprefixer": "10.4.14",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.3",
@@ -20,6 +23,26 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tailwindcss": "3.3.2",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "@fortawesome/fontawesome-free": "6.4.0",
+    "@popperjs/core": "2.11.7",
+    "@tailwindcss/forms": "0.5.3",
+    "@apollo/client": "^3.7.14",
+    "chart.js": "4.3.0",
+    "gulp": "4.0.2",
+    "gulp-append-prepend": "1.0.8",
+    "react-toastify": "9.1.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

@@ -1,5 +1,5 @@
 import { list } from "@keystone-6/core";
-import { checkbox, password, text, timestamp, select, relationship, integer } from "@keystone-6/core/fields";
+import { checkbox, password, text, timestamp, select, relationship, integer, float } from "@keystone-6/core/fields";
 
 const AttendanceTypes = [
   { label: "Checkin", value: "checkin" },
@@ -10,7 +10,7 @@ const model = list({
   access: () => true,
   fields: {
     type: select({ options: AttendanceTypes, defaultValue: "checkin" }),
-    temperature: integer({ defaultValue: 0 }),
+    temperature: float({ defaultValue: 0 }),
     capturePhotoUrl: text({ defaultValue: "" }),
     // relationship
     user: relationship({ many: false, ref: "School" }),

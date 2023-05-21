@@ -1,9 +1,9 @@
 import { list } from "@keystone-6/core";
-import { checkbox, password, text, timestamp } from "@keystone-6/core/fields";
+import { checkbox, password, relationship, text, timestamp } from "@keystone-6/core/fields";
 import { isValidPassword } from "src/utils/helper";
 import { ERROR_MSGS } from "src/utils/handleError";
 import hashImpl from "../configs/hashImpl";
-import { PASSWORD_SALT } from "src/configs/constants";
+import { PASSWORD_LENGTH, PASSWORD_SALT } from "src/configs/constants";
 
 const model = list({
   access: () => true,
@@ -12,7 +12,7 @@ const model = list({
     password: password({
       workFactor: PASSWORD_SALT,
       bcrypt: { compare: hashImpl.compare, hash: hashImpl.generateHash },
-      validation: { isRequired: false, length: { min: 6 } },
+      validation: { isRequired: false, length: PASSWORD_LENGTH },
       hooks: {
         validateInput({ resolvedData, fieldKey, operation, addValidationError }) {
           if (operation === "update") return;
@@ -31,6 +31,7 @@ const model = list({
     isSystemAdmin: checkbox({ defaultValue: false }),
     isVerified: checkbox({ defaultValue: false }),
     // relationship
+    school: relationship({ ref: "School", many: false }),
 
     // create-update
     createdAt: timestamp({ defaultValue: { kind: "now" } }),

@@ -1,28 +1,47 @@
-import { PrismaClient } from "@prisma/client";
-import { USERS, SYSTEM_USERS, DEFAULT_ROLES, TENANT_ROLES, EMPLOYEES, TENANTS } from "../sample";
+import { PrismaClient } from ".prisma/client";
+import { SYSTEM_USERS, SCHOOLS, generateUsers, generateAttendances } from "../samples";
+import moment from "moment";
+import { TOTAL_STUDENTS_PER_SCHOOL } from "../constants";
 
 async function main() {
   console.log("database: seeding");
   const prisma = new PrismaClient();
+  await prisma.$connect();
 
   try {
-    console.log(`- Adding system configuration`);
-    await createSeedSystemConfig(prisma);
+    console.log("database: seed start");
+    await prisma.user.createMany({ data: SYSTEM_USERS, skipDuplicates: true });
+    for (let index = 0; index < SCHOOLS.length; index++) {
+      console.log("bulk create school and user: ", index);
+      const school = await prisma.school.create({ data: SCHOOLS[index] });
+      // 5k users in one school
+      await prisma.user.createMany({ data: generateUsers(TOTAL_STUDENTS_PER_SCHOOL, school.id), skipDuplicates: true });
 
-    console.log(`- Adding default roles`);
-    await createSeedRoles(DEFAULT_ROLES, prisma);
+      const users = await prisma.user.findMany({ where: { school: { equals: school.id } } });
 
-    console.log(`Adding system admin users`);
-    await createSeedUsers(SYSTEM_USERS, prisma);
-
-    if (MODE === "development") {
-      console.log(`Adding mockup data`);
-      await createSeedUsers(USERS, prisma);
-      await createSeedTenants(TENANTS, prisma);
-      await createSeedOffices(OFFICES, prisma);
-      await createSeedDepartments(DEPARTMENTS, prisma);
-      await createSeedRoles(TENANT_ROLES, prisma);
-      await createSeedEmployees(EMPLOYEES, prisma);
+      // sample attendances
+      const startDay = moment("2020-04-15T07:00:00.000+07:00");
+      const endDay = moment("2020-04-15T17:00:00.000+07:00");
+      for (let indexDate = 0; indexDate < 5; indexDate++) {
+        await prisma.attendance.createMany({
+          data: generateAttendances(
+            school.id,
+            users.map((i) => i.id),
+            "checkin",
+            startDay.add(indexDate, "day").toISOString(),
+          ),
+          skipDuplicates: true,
+        });
+        await prisma.attendance.createMany({
+          data: generateAttendances(
+            school.id,
+            users.map((i) => i.id),
+            "checkout",
+            endDay.add(indexDate, "day").toISOString(),
+          ),
+          skipDuplicates: true,
+        });
+      }
     }
 
     console.log("database: seed done");

@@ -1,10 +1,35 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+datasource postgresql {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  relationMode      = "prisma"
+}
+
+model Attendance {
+  id              String    @id
+  type            String?   @default("checkin")
+  temperature     Float?    @default(0)
+  capturePhotoUrl String    @default("")
+  user            String?
+  school          String?
+  createdAt       DateTime? @default(now())
+  updatedAt       DateTime? @default(now())
+
+  @@index([school])
+  @@index([user])
+}
+
+model School {
+  id             String    @id
+  schoolName     String    @default("")
+  schoolPhotoUrl String    @default("")
+  createdAt      DateTime? @default(now())
+  updatedAt      DateTime? @default(now())
 }
 
 model User {
@@ -18,30 +43,7 @@ model User {
   isVerified    Boolean   @default(false)
   createdAt     DateTime? @default(now())
   updatedAt     DateTime? @default(now())
-}
-
-model Attendance {
-  id                               String    @id
-  type                             String?   @default("checkin")
-  temperature                      Int?      @default(0)
-  capturePhotoUrl                  String    @default("")
-  user                             String?
-  school                           String?
-  createdAt                        DateTime? @default(now())
-  updatedAt                        DateTime? @default(now())
-  School_Attendance_schoolToSchool School?   @relation("Attendance_schoolToSchool", fields: [school], references: [id])
-  School_Attendance_userToSchool   School?   @relation("Attendance_userToSchool", fields: [user], references: [id])
+  school        String?
 
   @@index([school])
-  @@index([user])
-}
-
-model School {
-  id                                   String       @id
-  schoolName                           String       @default("")
-  schoolPhotoUrl                       String       @default("")
-  createdAt                            DateTime?    @default(now())
-  updatedAt                            DateTime?    @default(now())
-  Attendance_Attendance_schoolToSchool Attendance[] @relation("Attendance_schoolToSchool")
-  Attendance_Attendance_userToSchool   Attendance[] @relation("Attendance_userToSchool")
 }

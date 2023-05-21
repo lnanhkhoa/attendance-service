@@ -10,6 +10,7 @@ type User {
   userPhotoUrl: String
   isSystemAdmin: Boolean
   isVerified: Boolean
+  school: School
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -37,6 +38,7 @@ input UserWhereInput {
   userPhotoUrl: StringFilter
   isSystemAdmin: BooleanFilter
   isVerified: BooleanFilter
+  school: SchoolWhereInput
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
 }
@@ -131,8 +133,15 @@ input UserUpdateInput {
   userPhotoUrl: String
   isSystemAdmin: Boolean
   isVerified: Boolean
+  school: SchoolRelateToOneForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
+}
+
+input SchoolRelateToOneForUpdateInput {
+  create: SchoolCreateInput
+  connect: SchoolWhereUniqueInput
+  disconnect: Boolean
 }
 
 input UserUpdateArgs {
@@ -148,8 +157,14 @@ input UserCreateInput {
   userPhotoUrl: String
   isSystemAdmin: Boolean
   isVerified: Boolean
+  school: SchoolRelateToOneForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
+}
+
+input SchoolRelateToOneForCreateInput {
+  create: SchoolCreateInput
+  connect: SchoolWhereUniqueInput
 }
 
 type School {
@@ -205,7 +220,7 @@ input SchoolCreateInput {
 type Attendance {
   id: ID!
   type: String
-  temperature: Int
+  temperature: Float
   capturePhotoUrl: String
   user: School
   school: School
@@ -223,7 +238,7 @@ input AttendanceWhereInput {
   NOT: [AttendanceWhereInput!]
   id: IDFilter
   type: StringNullableFilter
-  temperature: IntNullableFilter
+  temperature: FloatNullableFilter
   capturePhotoUrl: StringFilter
   user: SchoolWhereInput
   school: SchoolWhereInput
@@ -260,15 +275,15 @@ input NestedStringNullableFilter {
   not: NestedStringNullableFilter
 }
 
-input IntNullableFilter {
-  equals: Int
-  in: [Int!]
-  notIn: [Int!]
-  lt: Int
-  lte: Int
-  gt: Int
-  gte: Int
-  not: IntNullableFilter
+input FloatNullableFilter {
+  equals: Float
+  in: [Float!]
+  notIn: [Float!]
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: FloatNullableFilter
 }
 
 input AttendanceOrderByInput {
@@ -282,18 +297,12 @@ input AttendanceOrderByInput {
 
 input AttendanceUpdateInput {
   type: String
-  temperature: Int
+  temperature: Float
   capturePhotoUrl: String
   user: SchoolRelateToOneForUpdateInput
   school: SchoolRelateToOneForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
-}
-
-input SchoolRelateToOneForUpdateInput {
-  create: SchoolCreateInput
-  connect: SchoolWhereUniqueInput
-  disconnect: Boolean
 }
 
 input AttendanceUpdateArgs {
@@ -303,17 +312,12 @@ input AttendanceUpdateArgs {
 
 input AttendanceCreateInput {
   type: String
-  temperature: Int
+  temperature: Float
   capturePhotoUrl: String
   user: SchoolRelateToOneForCreateInput
   school: SchoolRelateToOneForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
-}
-
-input SchoolRelateToOneForCreateInput {
-  create: SchoolCreateInput
-  connect: SchoolWhereUniqueInput
 }
 
 """
