@@ -1,0 +1,34 @@
+{
+  "name": "attendance-system",
+  "version": "0.0.1",
+  "author": "lnanhkhoa",
+  "private": true,
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "base:build": "docker build -t node-base -f Dockerfile --target base .",
+    "dev:build": "docker compose --env-file .env.docker -f docker-compose.dev.yml build",
+    "dev:up": "docker compose --env-file .env.docker -f docker-compose.yml up -d",
+    "staging:build": "docker compose --env-file .env -f docker-compose.staging.yml build",
+    "staging:up": "docker compose --env-file .env -f docker-compose.staging.yml up -d",
+    "staging:down": "docker compose --env-file .env -f docker-compose.staging.yml down",
+    "clean:pkg": "rm -rf node_modules services/*/node_modules",
+    "clean:nx-cache": "nx reset"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "nx": "15.7.2",
+    "prettier": "^2.8.8",
+    "regenerator-runtime": "0.13.11",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^3.14.2",
+    "tslib": "2.5.0",
+    "typescript": "4.9.5"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@keystone-6/core@5.1.0": "patches/@keystone-6__core@5.1.0.patch"
+    }
+  }
+}

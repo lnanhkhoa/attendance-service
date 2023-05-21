@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id
+  email         String    @unique @default("")
+  password      String?
+  firstName     String    @default("")
+  lastName      String    @default("")
+  userPhotoUrl  String    @default("")
+  isSystemAdmin Boolean   @default(false)
+  isVerified    Boolean   @default(false)
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @default(now())
+}
+
+model Attendance {
+  id                               String    @id
+  type                             String?   @default("checkin")
+  temperature                      Int?      @default(0)
+  capturePhotoUrl                  String    @default("")
+  user                             String?
+  school                           String?
+  createdAt                        DateTime? @default(now())
+  updatedAt                        DateTime? @default(now())
+  School_Attendance_schoolToSchool School?   @relation("Attendance_schoolToSchool", fields: [school], references: [id])
+  School_Attendance_userToSchool   School?   @relation("Attendance_userToSchool", fields: [user], references: [id])
+
+  @@index([school])
+  @@index([user])
+}
+
+model School {
+  id                                   String       @id
+  schoolName                           String       @default("")
+  schoolPhotoUrl                       String       @default("")
+  createdAt                            DateTime?    @default(now())
+  updatedAt                            DateTime?    @default(now())
+  Attendance_Attendance_schoolToSchool Attendance[] @relation("Attendance_schoolToSchool")
+  Attendance_Attendance_userToSchool   Attendance[] @relation("Attendance_userToSchool")
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectRoot": "services/seed",
+  "root": "services/seed",
+  "sourceRoot": "services/seed",
+  "targets": {
+    "seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn --cwd services/seed seed"
+      },
+      "dependsOn": [
+        "pull",
+        "generate"
+      ]
+    },
+    "pull": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn --cwd services/seed pull"
+      }
+    },
+    "generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn --cwd services/seed generate"
+      },
+      "dependsOn": [
+        "pull"
+      ]
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter=seed seed"
+      },
+      "dependsOn": [
+        "pull",
+        "generate"
+      ]
+    }
+  }
+}

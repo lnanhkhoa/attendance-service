@@ -1,0 +1,14 @@
+{
+  "extends": "nx/presets/npm.json",
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "workspaceLayout": {
+    "appsDir": "services"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "options": {
+        "parallel": 1
+      }
+    }
+  }
+}

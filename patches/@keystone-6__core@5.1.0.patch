@@ -1,0 +1,48 @@
+diff --git a/dist/loadConfig-860f33eb.esm.js b/dist/loadConfig-860f33eb.esm.js
+index 9aaf3a60c4f5b584c6f70143b607aaf315d08008..75e78a586e14c51a343a7df78d08927f572a5be7 100644
+--- a/dist/loadConfig-860f33eb.esm.js
++++ b/dist/loadConfig-860f33eb.esm.js
+@@ -11,7 +11,10 @@ function getEsbuildConfig(cwd) {
+     outfile: '.keystone/config.js',
+     format: 'cjs',
+     platform: 'node',
+-    plugins: [{
++    plugins: [
++      require('@esbuild-plugins/tsconfig-paths').TsconfigPathsPlugin({
++        tsconfig: cwd + '/tsconfig.json'
++      }), {
+       name: 'external-node_modules',
+       setup(build) {
+         build.onResolve({
+diff --git a/dist/loadConfig-91b801c9.cjs.dev.js b/dist/loadConfig-91b801c9.cjs.dev.js
+index 010c1824933ecd544c3e347501e812bfffab7954..eea29f9f8ede28f296223805f68b92ae55639c3a 100644
+--- a/dist/loadConfig-91b801c9.cjs.dev.js
++++ b/dist/loadConfig-91b801c9.cjs.dev.js
+@@ -17,7 +17,10 @@ function getEsbuildConfig(cwd) {
+     outfile: '.keystone/config.js',
+     format: 'cjs',
+     platform: 'node',
+-    plugins: [{
++    plugins: [
++      require("@esbuild-plugins/tsconfig-paths").TsconfigPathsPlugin({
++        tsconfig: cwd + "/tsconfig.json",
++      }), {
+       name: 'external-node_modules',
+       setup(build) {
+         build.onResolve({
+diff --git a/dist/loadConfig-ba4aa295.cjs.prod.js b/dist/loadConfig-ba4aa295.cjs.prod.js
+index bab7747e14bf7d93e770b1d8055d5d03cc0542a6..74f000478243548606355b495025962cf3c1647d 100644
+--- a/dist/loadConfig-ba4aa295.cjs.prod.js
++++ b/dist/loadConfig-ba4aa295.cjs.prod.js
+@@ -17,7 +17,10 @@ function getEsbuildConfig(cwd) {
+     outfile: '.keystone/config.js',
+     format: 'cjs',
+     platform: 'node',
+-    plugins: [{
++    plugins: [
++      require("@esbuild-plugins/tsconfig-paths").TsconfigPathsPlugin({
++        tsconfig: cwd + "/tsconfig.json",
++      }), {
+       name: 'external-node_modules',
+       setup(build) {
+         build.onResolve({

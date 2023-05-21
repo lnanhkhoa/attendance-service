@@ -1,0 +1,23 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectRoot": "services/server",
+  "root": "services/server",
+  "sourceRoot": "services/server",
+  "targets": {
+    "dev:prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn --cwd services/server dev:prepare"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn --cwd services/server keystone dev"
+      },
+      "dependsOn": [
+        "dev:prepare"
+      ]
+    }
+  }
+}
