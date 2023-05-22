@@ -81,6 +81,9 @@ importers:
       eslint-config-next:
         specifier: 13.4.3
         version: 13.4.3(eslint@8.41.0)(typescript@5.0.4)
+      graphql-tag:
+        specifier: 2.12.6
+        version: 2.12.6(graphql@16.6.0)
       gulp:
         specifier: 4.0.2
         version: 4.0.2
@@ -90,6 +93,9 @@ importers:
       lodash:
         specifier: 4.17.21
         version: 4.17.21
+      moment:
+        specifier: 2.29.4
+        version: 2.29.4
       next:
         specifier: 13.4.3
         version: 13.4.3(@babel/core@7.21.8)(react-dom@18.2.0)(react@18.2.0)
@@ -114,12 +120,18 @@ importers:
       react-toastify:
         specifier: 9.1.2
         version: 9.1.2(react-dom@18.2.0)(react@18.2.0)
+      react-use-pagination:
+        specifier: ^2.0.1
+        version: 2.0.1(react@18.2.0)
       tailwindcss:
         specifier: 3.3.2
         version: 3.3.2(ts-node@10.9.1)
       typescript:
         specifier: 5.0.4
         version: 5.0.4
+      usehooks-ts:
+        specifier: 2.9.1
+        version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       zod:
         specifier: 3.21.4
         version: 3.21.4
@@ -139,8 +151,8 @@ importers:
         specifier: 2.4.3
         version: 2.4.3
       cuid:
-        specifier: 2.1.8
-        version: 2.1.8
+        specifier: 3.0.0
+        version: 3.0.0
       lodash:
         specifier: 4.17.21
         version: 4.17.21
@@ -11444,6 +11456,14 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
+  /react-use-pagination@2.0.1(react@18.2.0):
+    resolution: {integrity: sha512-bo7vI2oZ/+PJJozN7DLWPkewrULLoHb8a6WO3dGudJfEKnj8BVZVbJPkvn5jtydhJ5xi0t0W7xI06XlWUe8Jbw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /react@18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
@@ -13120,6 +13140,17 @@ packages:
   /use@3.1.1:
     resolution: {integrity: sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /usehooks-ts@2.9.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-2FAuSIGHlY+apM9FVlj8/oNhd+1y+Uwv5QNkMQz1oSfdHk4PXo1qoCw9I5M7j0vpH8CSWFJwXbVPeYDjLCx9PA==}
+    engines: {node: '>=16.15.0', npm: '>=8'}
+    peerDependencies:
+      react: ^16.8.0  || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0  || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /util-deprecate@1.0.2:

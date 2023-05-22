@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import NotificationDropdown from "@/components/Dropdowns/NotificationDropdown";
 import UserDropdown from "@/components/Dropdowns/UserDropdown";
 import clsx from "clsx";
+import { isDev } from "@/utils/constants";
 
 export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
@@ -67,7 +68,7 @@ export default function Sidebar() {
                 <input
                   type="text"
                   placeholder="Search"
-                  className="border-0 px-3 py-2 h-12 border border-solid  border-slate-500 placeholder-slate-300 text-slate-600 bg-white rounded text-base leading-snug shadow-none outline-none focus:outline-none w-full font-normal"
+                  className="px-3 py-2 h-12 border border-solid  border-slate-500 placeholder-slate-300 text-slate-600 bg-white rounded text-base leading-snug shadow-none outline-none focus:outline-none w-full font-normal"
                 />
               </div>
             </form>
@@ -101,40 +102,71 @@ export default function Sidebar() {
 
               <li className="items-center">
                 <Link
-                  href="/admin/settings"
+                  href="/admin/schools"
                   className={
                     "text-xs uppercase py-3 font-bold block " +
-                    (router.pathname.indexOf("/admin/settings") !== -1
-                      ? "text-sky-500 hover:text-sky-600"
-                      : "text-slate-700 hover:text-slate-500")
-                  }>
-                  <i
-                    className={
-                      "fas fa-tools mr-2 text-sm " +
-                      (router.pathname.indexOf("/admin/settings") !== -1 ? "opacity-75" : "text-slate-300")
-                    }></i>{" "}
-                  Settings
-                </Link>
-              </li>
-
-              <li className="items-center">
-                <Link
-                  href="/admin/tables"
-                  className={
-                    "text-xs uppercase py-3 font-bold block " +
-                    (router.pathname.indexOf("/admin/tables") !== -1
+                    (router.pathname.indexOf("/admin/schools") !== -1
                       ? "text-sky-500 hover:text-sky-600"
                       : "text-slate-700 hover:text-slate-500")
                   }>
                   <i
                     className={
                       "fas fa-table mr-2 text-sm " +
-                      (router.pathname.indexOf("/admin/tables") !== -1 ? "opacity-75" : "text-slate-300")
+                      (router.pathname.indexOf("/admin/schools") !== -1 ? "opacity-75" : "text-slate-300")
                     }></i>{" "}
-                  Tables
+                  Schools
                 </Link>
               </li>
             </ul>
+
+            {/*  */}
+            {/* Divider */}
+            {isDev ? (
+              <>
+                <hr className="my-4 md:min-w-full" />
+                <h6 className="md:min-w-full text-slate-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
+                  Admin Other Pages
+                </h6>
+                {/* Navigation */}
+                <ul className="md:flex-col md:min-w-full flex flex-col list-none">
+                  <li className="items-center">
+                    <Link
+                      href="/admin/settings"
+                      className={
+                        "text-xs uppercase py-3 font-bold block " +
+                        (router.pathname.indexOf("/admin/settings") !== -1
+                          ? "text-sky-500 hover:text-sky-600"
+                          : "text-slate-700 hover:text-slate-500")
+                      }>
+                      <i
+                        className={
+                          "fas fa-tools mr-2 text-sm " +
+                          (router.pathname.indexOf("/admin/settings") !== -1 ? "opacity-75" : "text-slate-300")
+                        }></i>{" "}
+                      Settings
+                    </Link>
+                  </li>
+
+                  <li className="items-center">
+                    <Link
+                      href="/admin/tables"
+                      className={
+                        "text-xs uppercase py-3 font-bold block " +
+                        (router.pathname.indexOf("/admin/tables") !== -1
+                          ? "text-sky-500 hover:text-sky-600"
+                          : "text-slate-700 hover:text-slate-500")
+                      }>
+                      <i
+                        className={
+                          "fas fa-table mr-2 text-sm " +
+                          (router.pathname.indexOf("/admin/tables") !== -1 ? "opacity-75" : "text-slate-300")
+                        }></i>{" "}
+                      Tables
+                    </Link>
+                  </li>
+                </ul>
+              </>
+            ) : null}
           </div>
         </div>
       </nav>
