@@ -5,15 +5,17 @@ interface PaginationProps {
   className: string;
   previousEnabled: boolean;
   nextEnabled: boolean;
+  total: number;
 }
 
 const ACTIVE_STYLE = "border-sky-500 text-white bg-sky-500";
 const DISABLE_STYLE = "border-sky-200 text-white bg-sky-200";
 
-export default function Pagination({ className, previousEnabled, nextEnabled }: PaginationProps) {
+export default function Pagination({ className, total, previousEnabled, nextEnabled }: PaginationProps) {
   return (
     <div className={clsx("py-1", className)}>
-      <nav className="flex justify-end">
+      <nav className="flex justify-between px-4 py-2">
+        <span className="text-md">Total: {total} items</span>
         <ul className="flex pl-0 rounded list-none flex-wrap">
           <li>
             <a

@@ -6,6 +6,8 @@ const model = list({
   fields: {
     schoolName: text({ validation: { isRequired: false }, defaultValue: "" }),
     schoolPhotoUrl: text({ defaultValue: "" }),
+    city: text({ defaultValue: "" }),
+    country: text({ defaultValue: "" }),
     // relationship
 
     // create-update

@@ -6,7 +6,7 @@ export default function LoadingOverlay({ isLoading, children }: { isLoading: boo
 
 function LoadingPage() {
   return (
-    <div className="min-h-screen pt-16 pb-12 flex flex-col bg-slate-800">
+    <div className="min-h-screen pt-16 pb-12 flex flex-col bg-slate-800 min-w-full">
       <div className="flex-grow flex flex-col justify-center max-w-7xl w-screen mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex-shrink-0 flex justify-center"></div>
         <div className="profile-main-loader mt-10">

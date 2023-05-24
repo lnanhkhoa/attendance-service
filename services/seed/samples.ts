@@ -46,6 +46,8 @@ export const SCHOOLS: Prisma.SchoolCreateInput[] = new Array(TOTAL_SCHOOLS).fill
   id: cuid(),
   schoolName: faker.company.name(),
   schoolPhotoUrl: faker.image.urlPicsumPhotos(),
+  country: faker.location.country(),
+  city: faker.location.city(),
 }));
 
 export const generateAttendances: (

@@ -2,7 +2,7 @@ import React from "react";
 
 // components
 
-import CardTable from "@/components/Cards/CardTable";
+import CardTable from "@/components/Cards/CardTableSchool";
 import Admin from "@/layouts/admin";
 
 export default function Tables() {

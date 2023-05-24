@@ -171,6 +171,8 @@ type School {
   id: ID!
   schoolName: String
   schoolPhotoUrl: String
+  city: String
+  country: String
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -186,6 +188,8 @@ input SchoolWhereInput {
   id: IDFilter
   schoolName: StringFilter
   schoolPhotoUrl: StringFilter
+  city: StringFilter
+  country: StringFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
 }
@@ -194,6 +198,8 @@ input SchoolOrderByInput {
   id: OrderDirection
   schoolName: OrderDirection
   schoolPhotoUrl: OrderDirection
+  city: OrderDirection
+  country: OrderDirection
   createdAt: OrderDirection
   updatedAt: OrderDirection
 }
@@ -201,6 +207,8 @@ input SchoolOrderByInput {
 input SchoolUpdateInput {
   schoolName: String
   schoolPhotoUrl: String
+  city: String
+  country: String
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -213,6 +221,8 @@ input SchoolUpdateArgs {
 input SchoolCreateInput {
   schoolName: String
   schoolPhotoUrl: String
+  city: String
+  country: String
   createdAt: DateTime
   updatedAt: DateTime
 }

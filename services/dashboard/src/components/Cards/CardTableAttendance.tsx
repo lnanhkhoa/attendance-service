@@ -3,16 +3,28 @@ import moment from "moment";
 // components
 
 import TableDropdown from "@/components/Dropdowns/TableDropdown";
+import Link from "next/link";
+import { Attendance } from "@/graphql/types";
 
 type ColorType = "light" | "dark";
+
 interface CardTableProps {
   title: string;
   color?: ColorType;
-  data: { id: string; schoolName: string; schoolPhotoUrl: string; createdAt: string; updatedAt: string }[];
+  data: any[] | null;
   mapping: { id: string; label: string; mapKey: string }[];
+  prefixLink?: string;
+  children: React.ReactNode;
 }
 
-export default function CardTable({ color = "light", title = "Card Table", data = [], mapping = [] }: CardTableProps) {
+export default function CardTableAttendance({
+  color = "light",
+  title = "Card Table",
+  data = [],
+  mapping = [],
+  prefixLink,
+  children,
+}: CardTableProps) {
   return (
     <>
       <div
@@ -52,23 +64,41 @@ export default function CardTable({ color = "light", title = "Card Table", data 
               {data.map((item) => {
                 return (
                   <tr key={item.id} className="border-b">
-                    <th className="border-t-0 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap">
-                      {item.id}
+                    <th className="border-t-0 align-middle border-l-0 border-r-0">
+                      <Link
+                        className="text-xs font-medium whitespace-nowrap text-sky-500 hover:text-sky-600"
+                        href={prefixLink + item.id}>
+                        {item.id}
+                      </Link>
                     </th>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
                       <img
-                        src={item.schoolPhotoUrl}
-                        className="h-12 w-12 bg-white rounded-full border"
+                        src={item.userPhotoUrl}
+                        className="h-12 w-12 bg-white rounded-full"
                         alt={`school_photo_${item.id}`}></img>{" "}
                       <span className={"ml-3 font-bold " + +(color === "light" ? "text-slate-600" : "text-white")}>
-                        {item.schoolName}
+                        {item.userName}
                       </span>
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      {moment(item.createdAt).format("YYYY-MM-DD")}
+                      {item.userEmail}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      <i className="fas fa-circle text-emerald-500 mr-2"></i> active
+                      {item.type === "checkin" ? (
+                        <>
+                          <i className="fas fa-circle text-emerald-500 mr-2"></i> Check-in
+                        </>
+                      ) : (
+                        <>
+                          <i className="fas fa-circle text-red-500 mr-2"></i> Check-in
+                        </>
+                      )}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+                      <img src={item.capturePhotoUrl} className="h-12 w-12 bg-white" alt={`photo_${item.id}`}></img>{" "}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      <i className="fas fa-circle text-indigo-600 mr-2"></i> {item.temperature}
                     </td>
                   </tr>
                 );
@@ -76,6 +106,7 @@ export default function CardTable({ color = "light", title = "Card Table", data 
             </tbody>
           </table>
         </div>
+        {children}
       </div>
     </>
   );

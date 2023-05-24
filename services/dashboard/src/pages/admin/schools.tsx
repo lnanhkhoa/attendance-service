@@ -1,14 +1,15 @@
-import React, { use, useEffect } from "react";
+import React, { use, useEffect, useState } from "react";
 
 // components
 
-import CardTable from "@/components/Cards/CardTable";
+import CardTableSchool from "@/components/Cards/CardTableSchool";
 import Admin from "@/layouts/admin";
 import Pagination from "@/components/Pagination/Pagination";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { GET_SCHOOLS } from "@/graphql/gql/school";
 import get from "lodash/get";
 import { usePagination } from "react-use-pagination";
+import { School } from "@/graphql/types";
 
 const mappingTitles = [
   { id: "1", label: "ID", mapKey: "id" },
@@ -18,24 +19,19 @@ const mappingTitles = [
 ];
 
 export default function Schools() {
+  const [textSearch, setTextSearch] = useState("");
+
   const { called, data, loading } = useQuery(GET_SCHOOLS, {
     variables: {
       skip: 0,
       take: 10,
       orderBy: [{ createdAt: "desc" }],
-      where: {},
-      // orderBy: [
-      //   {
-      //     createdAt: null,
-      //     schoolName: null,
-      //     schoolPhotoUrl: null,
-      //   },
-      // ],
-      // where: {
-      //   schoolName: {
-      //     contains: "",
-      //   },
-      // },
+      where: {
+        schoolName: {
+          contains: textSearch,
+          mode: "insensitive",
+        },
+      },
     },
   });
 
@@ -45,6 +41,10 @@ export default function Schools() {
   const { currentPage, totalPages, setNextPage, setPreviousPage, nextEnabled, previousEnabled, startIndex, endIndex } =
     usePagination({ totalItems: schools.length, initialPage: 1, initialPageSize: 10 });
 
+  const onSearchChange = (e: any) => {
+    setTextSearch(e.target.value);
+  };
+
   return (
     <Admin>
       <div className="flex flex-wrap mt-4">
@@ -52,19 +52,22 @@ export default function Schools() {
           <div className="max-w-md mb-4">
             <form className="md:flex hidden flex-row flex-wrap items-center lg:ml-auto">
               <div className="relative flex w-full flex-wrap items-stretch">
-                <span className="z-10 h-full leading-snug font-normal text-center text-blueGray-300 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3">
+                <span className="z-10 h-full leading-snug font-normal text-center text-slate-300 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3">
                   <i className="fas fa-search"></i>
                 </span>
                 <input
                   type="text"
                   placeholder="Search here..."
-                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white rounded text-sm shadow outline-none focus:outline-none focus:ring w-full pl-10"
+                  value={textSearch}
+                  onChange={onSearchChange}
+                  className="border-0 px-3 py-3 placeholder-slate-300 text-slate-600 relative bg-white rounded text-sm shadow outline-none focus:outline-none focus:ring w-full pl-10"
                 />
               </div>
             </form>
           </div>
-          <CardTable title="School" data={schools} mapping={mappingTitles} />
-          <Pagination className="" nextEnabled={nextEnabled} previousEnabled={previousEnabled} />
+          <CardTableSchool title="School" data={schools} mapping={mappingTitles} prefixLink={"/admin/school/"}>
+            <Pagination className="" total={schoolsCount} nextEnabled={nextEnabled} previousEnabled={previousEnabled} />
+          </CardTableSchool>
         </div>
       </div>
     </Admin>

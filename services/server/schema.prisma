@@ -34,6 +34,8 @@ model School {
   id                     String       @id @default(cuid())
   schoolName             String       @default("")
   schoolPhotoUrl         String       @default("")
+  city                   String       @default("")
+  country                String       @default("")
   createdAt              DateTime?    @default(now())
   updatedAt              DateTime?    @default(now()) @updatedAt
   from_User_school       User[]       @relation("User_school")
