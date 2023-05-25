@@ -25,9 +25,23 @@ WORKDIR /app
 COPY --from=build /app /app
 COPY services/server services/server
 RUN pnpm install
+ENV NEXT_TELEMETRY_DISABLED 1
+RUN pnpm nx run server:build
 
 # dashboard
 FROM node-base:latest as dashboard
 WORKDIR /app
 COPY --from=build /app /app
 COPY services/dashboard services/dashboard
+
+RUN pnpm install
+ENV NEXT_TELEMETRY_DISABLED 1
+RUN pnpm nx run dashboard:build
+
+
+# dashboard
+FROM node-base:latest as seed
+WORKDIR /app
+COPY --from=build /app /app
+COPY services/seed services/seed
+RUN pnpm install
