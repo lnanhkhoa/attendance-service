@@ -41,7 +41,7 @@ services:
       NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL}
     ports:
       - ${DASHBOARD_PORT}:4001
-    command: /bin/sh -c "pnpm nx run dashboard:start"
+    command: /bin/sh -c "pnpm nx run dashboard:start --with-migrations"
 
   seed:
     image: seed:latest
