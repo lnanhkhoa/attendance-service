@@ -13,9 +13,6 @@ export default function Auth({ children }: any) {
   const [isReady, setIsReady] = useState(false);
   const router = useRouter();
   useEffect(() => {
-    if (isLoggedIn) {
-      router.push("/admin/dashboard");
-    }
     setTimeout(() => {
       setIsReady(true);
     }, 300);

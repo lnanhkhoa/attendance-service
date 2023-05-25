@@ -6,6 +6,7 @@ templateSettings.interpolate = /{{([\s\S]+?)}}/g;
 export const ERROR_MSGS = {
   INTERNAL_SERVER_ERROR: "Internal server error.",
   PASSWORD_INVALID: "Invalid password.",
+  USER_NOT_FOUND: "User not found",
 };
 
 function throwError(msgCode: keyof typeof ERROR_MSGS, params?: any): never {
@@ -16,4 +17,5 @@ function throwError(msgCode: keyof typeof ERROR_MSGS, params?: any): never {
     },
   });
 }
+
 export default { throwError };

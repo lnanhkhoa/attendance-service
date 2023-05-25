@@ -1,7 +1,9 @@
 import { PrismaClient } from ".prisma/client";
-import { SYSTEM_USERS, SCHOOLS, generateUsers, generateAttendances } from "../samples";
+import { SYSTEM_USERS, SCHOOLS, generateUsers, generateAttendances, hashedPassword } from "../samples";
 import moment from "moment";
 import { TOTAL_STUDENTS_PER_SCHOOL } from "../constants";
+import { faker } from "@faker-js/faker";
+import cuid from "cuid";
 
 async function main() {
   console.log("database: seeding");
@@ -16,19 +18,33 @@ async function main() {
       const school = await prisma.school.create({ data: SCHOOLS[index] });
       // 5k users in one school
       await prisma.user.createMany({ data: generateUsers(TOTAL_STUDENTS_PER_SCHOOL, school.id), skipDuplicates: true });
+      if (index === 0) {
+        await prisma.user.create({
+          data: {
+            id: cuid(),
+            email: "khoale@mailinator.com",
+            firstName: "Khoa",
+            lastName: "Le",
+            isSystemAdmin: false,
+            isVerified: true,
+            password: hashedPassword,
+            userPhotoUrl: faker.internet.avatar(),
+            school: school.id,
+          },
+        });
+      }
 
       const users = await prisma.user.findMany({ where: { school: { equals: school.id } } });
 
       // sample attendances
-      const startDay = moment("2020-04-15T07:00:00.000+07:00");
-      const endDay = moment("2020-04-15T17:00:00.000+07:00");
+
       for (let indexDate = 0; indexDate < 5; indexDate++) {
         await prisma.attendance.createMany({
           data: generateAttendances(
             school.id,
             users.map((i) => i.id),
             "checkin",
-            startDay.add(indexDate, "day").toISOString(),
+            moment().subtract(8, "days").add(indexDate, "day").startOf("days").toISOString(),
           ),
           skipDuplicates: true,
         });
@@ -37,7 +53,7 @@ async function main() {
             school.id,
             users.map((i) => i.id),
             "checkout",
-            endDay.add(indexDate, "day").toISOString(),
+            moment().subtract(8, "days").add(indexDate, "day").endOf("days").toISOString(),
           ),
           skipDuplicates: true,
         });

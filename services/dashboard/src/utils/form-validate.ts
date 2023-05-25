@@ -15,49 +15,18 @@ export const formLoginSchema = z.object({
     })
     .min(6, "At least 6 characters"),
 });
-
 export type FormLoginSchemaType = z.infer<typeof formLoginSchema>;
-
 export const zodLoginForm = (values: any) => formLoginSchema.parse(values);
 
-export const formSignUpSchema = z
-  .object({
-    email: z
-      .string({
-        required_error: "Email is required",
-        invalid_type_error: "Email is string",
-      })
-      .email("Invalid email address"),
-    firstName: z.string({
-      required_error: "First Name is required",
-      invalid_type_error: "First Name is string",
-    }),
-    lastName: z.string({
-      required_error: "Last Name is required",
-      invalid_type_error: "First Name is string",
-    }),
-    password: z
-      .string({
-        required_error: "Password is required",
-        invalid_type_error: "password is string",
-      })
-      .min(8, "At least 6 characters"),
-    confirmPassword: z.string({
-      required_error: "Confirm Password is required",
-      invalid_type_error: "Confirm Password is string",
-    }),
-    terms: z.literal(true, {
-      errorMap: () => ({ message: "You must accept the terms and conditions" }),
-    }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-export type FormSignUpSchemaType = z.infer<typeof formSignUpSchema>;
-
-export const zodSignUpForm = (values: any) => formSignUpSchema.parse(values);
+export const formCheckinSchema = z.object({
+  type: z.string({
+    required_error: "Field is required",
+    invalid_type_error: "Field is string",
+  }),
+  date: z.string(),
+});
+export type FormCheckinSchemaType = z.infer<typeof formCheckinSchema>;
+export const zodCheckinForm = (values: any) => formCheckinSchema.parse(values);
 
 export const formSchema = (values: any, pageName: any) => {
   const formSchemaValue: { [k: string]: any } = {};
@@ -118,8 +87,8 @@ export const zodPageSchema = (values: any, pageName: string) => {
       case "login":
         zodLoginForm(values);
         break;
-      case "register":
-        zodSignUpForm(values);
+      case "checkin":
+        zodCheckinForm(values);
         break;
       default:
         zodForm(values, pageName);

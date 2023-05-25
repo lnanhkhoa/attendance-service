@@ -27,9 +27,14 @@ export default function Login() {
   const validate = useCallback((values: typeof initialValues) => zodPageSchema(values, "login"), []);
   const [loginMutate, { called, loading, error }] = useMutation(MUTATION_SIGN_IN, {
     onCompleted(data) {
-      const accessToken = get(data, ["authenticateUserWithPassword", "item", "sessionToken"], "");
+      const accessToken = get(data, ["authenticateUserWithPassword", "sessionToken"], "");
       login(accessToken);
-      router.replace("/admin/dashboard");
+      const isSystemAdmin = get(data, ["authenticateUserWithPassword", "item", "isSystemAdmin"], false);
+      if (isSystemAdmin) {
+        router.replace("/admin/dashboard");
+      } else {
+        router.replace("/attendance");
+      }
       return true;
     },
     onError: (err) => toast(err.message, { type: "error" }),

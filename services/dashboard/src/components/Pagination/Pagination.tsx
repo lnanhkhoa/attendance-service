@@ -35,7 +35,7 @@ export default function Pagination({
   return (
     <div className={clsx("py-1", className)}>
       <nav className="flex justify-between px-4 py-2">
-        <span className="text-md">Total: {total} items</span>
+        <span className="text-md">Total: {totalPages} pages</span>
         <ul className="flex pl-0 rounded list-none flex-wrap">
           <li>
             <button

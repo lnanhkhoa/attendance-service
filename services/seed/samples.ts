@@ -4,7 +4,7 @@ import cuid from "cuid";
 import bcryptjs from "bcryptjs";
 import { TOTAL_SCHOOLS } from "./constants";
 
-const hashedPassword = bcryptjs.hashSync("Admin@123");
+export const hashedPassword = bcryptjs.hashSync("Admin@123");
 
 export const generateUsers: (total: number, schoolId: string) => Prisma.UserCreateInput[] = (total, schoolId) =>
   new Array(total).fill(1).map((i) => ({

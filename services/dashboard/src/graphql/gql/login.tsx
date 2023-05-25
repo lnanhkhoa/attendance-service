@@ -15,3 +15,9 @@ export const MUTATION_SIGN_IN = gql`
     }
   }
 `;
+
+export const MUTATION_CHECK_IN = gql`
+  mutation AttendCheckin($type: String!, $date: String!) {
+    attendCheckin(type: $type, date: $date)
+  }
+`;

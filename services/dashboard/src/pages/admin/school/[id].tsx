@@ -11,7 +11,7 @@ import CardTableAttendance from "@/components/Cards/CardTableAttendance";
 import { School } from "@/graphql/types";
 import { get } from "lodash";
 import clsx from "clsx";
-import { toFahrenheit } from "@/utils/constants";
+import { toFahrenheit, IMAGE_DEFAULT, SelectTime, getQueryTime } from "@/utils/constants";
 
 const mappingTitles = [
   { id: "1", label: "ID", mapKey: "id" },
@@ -21,16 +21,6 @@ const mappingTitles = [
   { id: "6", label: "Temperature", mapKey: "temperature" },
   { id: "7", label: "Created At", mapKey: "createdAt" },
 ];
-
-enum SelectTime {
-  today = "today",
-  currentWeek = "currentWeek",
-  currentMonth = "currentMonth",
-  all = "all",
-}
-
-const IMAGE_DEFAULT =
-  "https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2710&q=80";
 
 export default function SchoolDetail() {
   const router = useRouter();
@@ -51,18 +41,21 @@ export default function SchoolDetail() {
   const [total, setTotal] = useState(0);
   const [isCelsius, setIsCelsius] = useState(true);
 
-  const attendanceVariables = (id: string, currentPage = 0) => ({
-    where: {
-      school: {
-        id: {
-          equals: id,
+  const attendanceVariables = (id: string, currentPage = 0, selectTime) => {
+    return {
+      where: {
+        school: {
+          id: {
+            equals: id,
+          },
         },
+        ...getQueryTime(selectTime),
       },
-    },
-    take: 10,
-    skip: currentPage * 10,
-    orderBy: [{ createdAt: "desc" }],
-  });
+      take: 10,
+      skip: currentPage * 10,
+      orderBy: [{ createdAt: "desc" }],
+    };
+  };
 
   const {
     currentPage,
@@ -79,35 +72,41 @@ export default function SchoolDetail() {
   function onNextPage() {
     if (!nextEnabled) return;
     const nextPage = currentPage + 1;
-    getAttendances({ variables: attendanceVariables(id, nextPage) }).then((res) => {
+    getAttendances({ variables: attendanceVariables(id, nextPage, selectTime) }).then((res) => {
       setNextPage();
     });
   }
   function onPreviousPage() {
     if (!previousEnabled) return;
     const previousPage = currentPage - 1;
-    getAttendances({ variables: attendanceVariables(id, previousPage) }).then((res) => {
+    getAttendances({ variables: attendanceVariables(id, previousPage, selectTime) }).then((res) => {
       setPreviousPage();
     });
   }
   function onSetPage(page: number) {
-    getAttendances({ variables: attendanceVariables(id, page) }).then((res) => {
+    getAttendances({ variables: attendanceVariables(id, page, selectTime) }).then((res) => {
       setPage(page);
     });
   }
 
   useEffect(() => {
-    if (!loading) {
-      setTotal((prev) => attendRes?.attendancesCount || prev);
+    if (!loading && attendRes?.attendancesCount > 0) {
+      setTotal(attendRes?.attendancesCount);
     }
   }, [loading, attendRes]);
+
+  useEffect(() => {
+    if (selectTime) {
+      getAttendances({ variables: attendanceVariables(id, currentPage, selectTime) });
+    }
+  }, [selectTime]);
 
   useEffect(() => {
     if (id) {
       getSchool({ variables: { where: { id } } }).then((res: any) => {
         if (res?.data?.school) {
           setSchoolData(res.data.school);
-          getAttendances({ variables: attendanceVariables(id) });
+          getAttendances({ variables: attendanceVariables(id, 0, selectTime) });
         }
       });
     }
@@ -183,15 +182,15 @@ export default function SchoolDetail() {
                   Today
                 </button>
                 <button
-                  onClick={() => setSelectTime(SelectTime.currentWeek)}
+                  onClick={() => setSelectTime(SelectTime.last7Days)}
                   className={clsx(
                     "font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150",
-                    selectTime === SelectTime.currentWeek
+                    selectTime === SelectTime.last7Days
                       ? "bg-slate-800 text-white active:bg-slate-600"
                       : "bg-white active:bg-slate-50 text-slate-700",
                   )}
                   type="button">
-                  Current Week
+                  Last 7 Days ago
                 </button>
                 <button
                   onClick={() => setSelectTime(SelectTime.currentMonth)}

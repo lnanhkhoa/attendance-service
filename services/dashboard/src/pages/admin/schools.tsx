@@ -20,7 +20,7 @@ const mappingTitles = [
 export default function Schools() {
   const [textSearch, setTextSearch] = useState("");
 
-  const [getSchools, { data: schoolsRes, loading }] = useLazyQuery(GET_SCHOOLS);
+  const [getSchools, { data: schoolsRes, loading }] = useLazyQuery(GET_SCHOOLS, { nextFetchPolicy: "no-cache" });
   const [total, setTotal] = useState(0);
 
   const makeVariables = (page: number) => ({
