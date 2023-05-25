@@ -27,7 +27,7 @@ services:
       SESSION_SECRET: ${SESSION_SECRET}
       DATABASE_URL: ${DATABASE_URL}
     ports:
-      - ${SERVER_PORT}:3000
+      - ${SERVER_PORT}:4000
     command: /bin/sh -c "pnpm nx run server:start"
 
   dashboard:
