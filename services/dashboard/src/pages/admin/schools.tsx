@@ -1,15 +1,14 @@
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useMemo, useState } from "react";
 
 // components
 
 import CardTableSchool from "@/components/Cards/CardTableSchool";
 import Admin from "@/layouts/admin";
 import Pagination from "@/components/Pagination/Pagination";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { GET_SCHOOLS } from "@/graphql/gql/school";
 import get from "lodash/get";
 import { usePagination } from "react-use-pagination";
-import { School } from "@/graphql/types";
 
 const mappingTitles = [
   { id: "1", label: "ID", mapKey: "id" },
@@ -21,29 +20,69 @@ const mappingTitles = [
 export default function Schools() {
   const [textSearch, setTextSearch] = useState("");
 
-  const { called, data, loading } = useQuery(GET_SCHOOLS, {
-    variables: {
-      skip: 0,
-      take: 10,
-      orderBy: [{ createdAt: "desc" }],
-      where: {
-        schoolName: {
-          contains: textSearch,
-          mode: "insensitive",
-        },
+  const [getSchools, { data: schoolsRes, loading }] = useLazyQuery(GET_SCHOOLS);
+  const [total, setTotal] = useState(0);
+
+  const makeVariables = (page: number) => ({
+    skip: page * 10,
+    take: 10,
+    orderBy: [{ createdAt: "desc" }],
+    where: {
+      schoolName: {
+        contains: textSearch,
+        mode: "insensitive",
       },
     },
   });
 
-  const schools = get(data, "schools", []) || [];
-  const schoolsCount = get(data, "schoolsCount", 0) || 0;
+  const {
+    currentPage,
+    totalPages,
+    nextEnabled,
+    previousEnabled,
+    startIndex,
+    endIndex,
+    setNextPage,
+    setPreviousPage,
+    setPage,
+  } = usePagination({ totalItems: total, initialPageSize: 10 });
 
-  const { currentPage, totalPages, setNextPage, setPreviousPage, nextEnabled, previousEnabled, startIndex, endIndex } =
-    usePagination({ totalItems: schools.length, initialPage: 1, initialPageSize: 10 });
+  const schools = useMemo(() => get(schoolsRes, "schools", []), [schoolsRes]);
 
   const onSearchChange = (e: any) => {
     setTextSearch(e.target.value);
   };
+
+  function onNextPage() {
+    if (!nextEnabled) return;
+    const nextPage = currentPage + 1;
+    getSchools({ variables: makeVariables(nextPage) }).then((res) => {
+      setNextPage();
+    });
+  }
+  function onPreviousPage() {
+    if (!previousEnabled) return;
+    const previousPage = currentPage - 1;
+    getSchools({ variables: makeVariables(previousPage) }).then((res) => {
+      setPreviousPage();
+    });
+  }
+  function onSetPage(page: number) {
+    getSchools({ variables: makeVariables(page) }).then((res) => {
+      setPage(page);
+    });
+  }
+
+  useEffect(() => {
+    getSchools({ variables: makeVariables(0) });
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      setTotal((prev) => schoolsRes?.schoolsCount || prev);
+    }
+  }, [loading, schoolsRes]);
 
   return (
     <Admin>
@@ -66,7 +105,19 @@ export default function Schools() {
             </form>
           </div>
           <CardTableSchool title="School" data={schools} mapping={mappingTitles} prefixLink={"/admin/school/"}>
-            <Pagination className="" total={schoolsCount} nextEnabled={nextEnabled} previousEnabled={previousEnabled} />
+            <Pagination
+              className=""
+              total={total}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setNextPage={onNextPage}
+              setPreviousPage={onPreviousPage}
+              setPage={onSetPage}
+              nextEnabled={nextEnabled}
+              previousEnabled={previousEnabled}
+              startIndex={startIndex}
+              endIndex={endIndex}
+            />
           </CardTableSchool>
         </div>
       </div>

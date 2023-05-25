@@ -4,6 +4,7 @@ export interface Attendance {
   temperature: string;
   type: "checkin" | "checkout";
   user: User;
+  createdAt: string;
 }
 
 export interface School {

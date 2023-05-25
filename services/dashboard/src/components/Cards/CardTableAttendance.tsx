@@ -4,6 +4,7 @@ import moment from "moment";
 
 import TableDropdown from "@/components/Dropdowns/TableDropdown";
 import Link from "next/link";
+import Image from "next/image";
 import { Attendance } from "@/graphql/types";
 
 type ColorType = "light" | "dark";
@@ -24,12 +25,13 @@ export default function CardTableAttendance({
   mapping = [],
   prefixLink,
   children,
+  on
 }: CardTableProps) {
   return (
     <>
       <div
         className={
-          "relative flex flex-col min-w-0 break-words w-full mb-3 shadow-lg rounded " +
+          "relative flex flex-col min-w-0 break-words border w-full shadow-lg rounded-lg min-h-800-px" +
           (color === "light" ? "bg-white" : "bg-slate-700 text-white")
         }>
         <div className="rounded-t mb-0 px-4 py-3 border-0">
@@ -65,23 +67,23 @@ export default function CardTableAttendance({
                 return (
                   <tr key={item.id} className="border-b">
                     <th className="border-t-0 align-middle border-l-0 border-r-0">
-                      <Link
+                      <button
                         className="text-xs font-medium whitespace-nowrap text-sky-500 hover:text-sky-600"
-                        href={prefixLink + item.id}>
+                        // href={prefixLink + item.id}
+                      >
                         {item.id}
-                      </Link>
+                      </button>
                     </th>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-                      <img
+                      <Image
                         src={item.userPhotoUrl}
+                        height={48}
+                        width={48}
                         className="h-12 w-12 bg-white rounded-full"
-                        alt={`school_photo_${item.id}`}></img>{" "}
+                        alt={`school_photo_${item.id}`}></Image>{" "}
                       <span className={"ml-3 font-bold " + +(color === "light" ? "text-slate-600" : "text-white")}>
                         {item.userName}
                       </span>
-                    </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      {item.userEmail}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                       {item.type === "checkin" ? (
@@ -90,15 +92,23 @@ export default function CardTableAttendance({
                         </>
                       ) : (
                         <>
-                          <i className="fas fa-circle text-red-500 mr-2"></i> Check-in
+                          <i className="fas fa-circle text-red-500 mr-2"></i> Check-out
                         </>
                       )}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-                      <img src={item.capturePhotoUrl} className="h-12 w-12 bg-white" alt={`photo_${item.id}`}></img>{" "}
+                      <Image
+                        src={item.capturePhotoUrl}
+                        height={48}
+                        width={48}
+                        className="h-12 w-12 bg-white"
+                        alt={`photo_${item.id}`}></Image>{" "}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                       <i className="fas fa-circle text-indigo-600 mr-2"></i> {item.temperature}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {moment(item.createdAt).format("YYYY-MM-DD HH:mm:ss")}
                     </td>
                   </tr>
                 );

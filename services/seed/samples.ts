@@ -45,7 +45,7 @@ export const SYSTEM_USERS: Prisma.UserCreateInput[] = [
 export const SCHOOLS: Prisma.SchoolCreateInput[] = new Array(TOTAL_SCHOOLS).fill(1).map((i) => ({
   id: cuid(),
   schoolName: faker.company.name(),
-  schoolPhotoUrl: faker.image.urlPicsumPhotos(),
+  schoolPhotoUrl: faker.image.urlPicsumPhotos({ width: 800, height: 600 }),
   country: faker.location.country(),
   city: faker.location.city(),
 }));

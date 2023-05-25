@@ -11,7 +11,7 @@ export const GET_SCHOOLS = gql`
       createdAt
       updatedAt
     }
-    schoolsCount
+    schoolsCount(where: $where)
   }
 `;
 
@@ -43,6 +43,8 @@ export const GET_ATTENDANCES = gql`
         lastName
         userPhotoUrl
       }
+      createdAt
     }
+    attendancesCount(where: $where)
   }
 `;

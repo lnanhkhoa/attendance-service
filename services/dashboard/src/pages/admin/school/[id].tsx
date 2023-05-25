@@ -1,53 +1,57 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import Admin from "@/layouts/admin";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { GET_ATTENDANCES, GET_SCHOOL } from "@/graphql/gql/school";
 import { useRouter } from "next/router";
 import { usePagination } from "react-use-pagination";
 import Pagination from "@/components/Pagination/Pagination";
 import CardTableAttendance from "@/components/Cards/CardTableAttendance";
 
-import { School, Attendance } from "@/graphql/types";
+import { School } from "@/graphql/types";
+import { get } from "lodash";
+import clsx from "clsx";
+import { toFahrenheit } from "@/utils/constants";
 
 const mappingTitles = [
   { id: "1", label: "ID", mapKey: "id" },
   { id: "2", label: "User", mapKey: "userName" },
-  { id: "3", label: "Email", mapKey: "userEmail" },
   { id: "4", label: "Check Type", mapKey: "type" },
   { id: "5", label: "Image", mapKey: "capturePhotoUrl" },
-  { id: "5", label: "Temperature", mapKey: "temperature" },
+  { id: "6", label: "Temperature", mapKey: "temperature" },
+  { id: "7", label: "Created At", mapKey: "createdAt" },
 ];
+
+enum SelectTime {
+  today = "today",
+  currentWeek = "currentWeek",
+  currentMonth = "currentMonth",
+  all = "all",
+}
+
+const IMAGE_DEFAULT =
+  "https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2710&q=80";
 
 export default function SchoolDetail() {
   const router = useRouter();
-  const id = router.query.id;
+  const id = String(router.query.id);
   const [getSchool] = useLazyQuery(GET_SCHOOL);
-  const [getAttendances] = useLazyQuery(GET_ATTENDANCES);
+
+  const [selectTime, setSelectTime] = useState(SelectTime.today);
 
   // school
   const [schoolData, setSchoolData] = useState<School | null>(null);
-  const schoolImage =
-    schoolData?.schoolPhotoUrl ||
-    "https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2710&q=80";
+  const schoolImage = schoolData?.schoolPhotoUrl || IMAGE_DEFAULT;
   const schoolName = schoolData?.schoolName;
   const schoolLocation = String(schoolData?.city) + ", " + String(schoolData?.country);
 
   // attendances
-  const [attendances, setAttendances] = useState<Attendance[] | null>(null);
-  const mappingAttendances = attendances?.map((i) => {
-    return {
-      id: i.id,
-      userName: i.user?.firstName + " " + i.user?.lastName,
-      userEmail: i.user?.email,
-      userPhotoUrl: i.user?.userPhotoUrl,
-      type: i.type,
-      capturePhotoUrl: i.capturePhotoUrl,
-      temperature: i.temperature,
-    };
-  });
+  const [getAttendances, { data: attendRes, loading }] = useLazyQuery(GET_ATTENDANCES, { fetchPolicy: "no-cache" });
+  const attendances = useMemo(() => get(attendRes, "attendances", []), [attendRes]);
+  const [total, setTotal] = useState(0);
+  const [isCelsius, setIsCelsius] = useState(true);
 
-  const attendVariables = {
+  const attendanceVariables = (id: string, currentPage = 0) => ({
     where: {
       school: {
         id: {
@@ -56,28 +60,73 @@ export default function SchoolDetail() {
       },
     },
     take: 10,
-    skip: 0,
-    orderBy: [],
-  };
+    skip: currentPage * 10,
+    orderBy: [{ createdAt: "desc" }],
+  });
 
-  const { currentPage, totalPages, setNextPage, setPreviousPage, nextEnabled, previousEnabled, startIndex, endIndex } =
-    usePagination({ totalItems: 10, initialPage: 1, initialPageSize: 10 });
+  const {
+    currentPage,
+    totalPages,
+    nextEnabled,
+    previousEnabled,
+    startIndex,
+    endIndex,
+    setNextPage,
+    setPreviousPage,
+    setPage,
+  } = usePagination({ totalItems: total, initialPageSize: 10 });
+
+  function onNextPage() {
+    if (!nextEnabled) return;
+    const nextPage = currentPage + 1;
+    getAttendances({ variables: attendanceVariables(id, nextPage) }).then((res) => {
+      setNextPage();
+    });
+  }
+  function onPreviousPage() {
+    if (!previousEnabled) return;
+    const previousPage = currentPage - 1;
+    getAttendances({ variables: attendanceVariables(id, previousPage) }).then((res) => {
+      setPreviousPage();
+    });
+  }
+  function onSetPage(page: number) {
+    getAttendances({ variables: attendanceVariables(id, page) }).then((res) => {
+      setPage(page);
+    });
+  }
+
+  useEffect(() => {
+    if (!loading) {
+      setTotal((prev) => attendRes?.attendancesCount || prev);
+    }
+  }, [loading, attendRes]);
 
   useEffect(() => {
     if (id) {
       getSchool({ variables: { where: { id } } }).then((res: any) => {
-        setSchoolData(res?.data?.school);
-        getAttendances({ variables: attendVariables }).then((attendRes: any) => {
-          setAttendances(attendRes.data.attendances);
-        });
+        if (res?.data?.school) {
+          setSchoolData(res.data.school);
+          getAttendances({ variables: attendanceVariables(id) });
+        }
       });
     }
     return () => {};
-  }, [id, getSchool, getAttendances]);
+  }, [id]);
+
+  const mappingAttendances = attendances?.map((i) => ({
+    id: i.id,
+    userName: i.user?.firstName + " " + i.user?.lastName,
+    userPhotoUrl: i.user?.userPhotoUrl,
+    type: i.type,
+    capturePhotoUrl: i.capturePhotoUrl,
+    temperature: isCelsius ? i.temperature + " °C" : toFahrenheit(i.temperature) + " °F",
+    createdAt: i.createdAt,
+  }));
 
   return (
     <Admin hideHeader>
-      <section className="relative block h-350-px">
+      <section className="relative block h-500-px">
         <div
           className="absolute top-0 w-full h-full bg-center bg-cover"
           style={{ backgroundImage: `url('${schoolImage}')` }}>
@@ -108,22 +157,81 @@ export default function SchoolDetail() {
                   <i className="fas fa-map-marker-alt mr-2 text-lg text-slate-400"></i> {schoolLocation}
                 </div>
               </div>
-              <div className="mt-10 py-10 border-t border-slate-200 text-center">
+              <div className="mt-6 py-6 mb-6 border-t border-slate-200 text-center">
                 <div className="flex flex-wrap justify-center">
                   <div className="w-full lg:w-9/12 px-4">
-                    <p className="mb-4 text-lg leading-relaxed text-slate-700">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
-                      the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
-                      type and scrambled it to make a type specimen book. It has survived not only five centuries, but
-                      also the leap into electronic typesetting, remaining essentially unchanged.
+                    <p className="mb-2 text-lg leading-relaxed text-slate-700">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et lobortis arcu, sodales mattis
+                      ante. Integer viverra sed nunc sed iaculis. Vivamus a lacus fringilla, posuere dolor id, varius
+                      risus.
                     </p>
                   </div>
                 </div>
               </div>
-              <CardTableAttendance title="Attendance" data={mappingAttendances} mapping={mappingTitles} color="dark">
-                <Pagination className="" total={10} nextEnabled={nextEnabled} previousEnabled={previousEnabled} />
-              </CardTableAttendance>
             </div>
+            <div className="p-4 flex justify-between">
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setSelectTime(SelectTime.today)}
+                  className={clsx(
+                    "font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150",
+                    selectTime === SelectTime.today
+                      ? "bg-slate-800 text-white active:bg-slate-600"
+                      : "bg-white active:bg-slate-50 text-slate-700",
+                  )}>
+                  Today
+                </button>
+                <button
+                  onClick={() => setSelectTime(SelectTime.currentWeek)}
+                  className={clsx(
+                    "font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150",
+                    selectTime === SelectTime.currentWeek
+                      ? "bg-slate-800 text-white active:bg-slate-600"
+                      : "bg-white active:bg-slate-50 text-slate-700",
+                  )}
+                  type="button">
+                  Current Week
+                </button>
+                <button
+                  onClick={() => setSelectTime(SelectTime.currentMonth)}
+                  className={clsx(
+                    "font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150",
+                    selectTime === SelectTime.currentMonth
+                      ? "bg-slate-800 text-white active:bg-slate-600"
+                      : "bg-white active:bg-slate-50 text-slate-700",
+                  )}
+                  type="button">
+                  Current Month
+                </button>
+              </div>
+              <div>
+                <button
+                  onClick={() => setIsCelsius((prev) => !prev)}
+                  className={clsx(
+                    "font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150",
+                    "bg-slate-800 text-white active:bg-slate-600",
+                  )}
+                  type="button">
+                  {isCelsius ? "Convert °C to °F" : "Convert °F to °C"}
+                </button>
+              </div>
+            </div>
+            <CardTableAttendance title="Attendances" data={mappingAttendances} mapping={mappingTitles}>
+              <Pagination
+                className=""
+                total={total}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setNextPage={onNextPage}
+                setPreviousPage={onPreviousPage}
+                setPage={onSetPage}
+                nextEnabled={nextEnabled}
+                previousEnabled={previousEnabled}
+                startIndex={startIndex}
+                endIndex={endIndex}
+              />
+            </CardTableAttendance>
           </div>
         </div>
       </section>

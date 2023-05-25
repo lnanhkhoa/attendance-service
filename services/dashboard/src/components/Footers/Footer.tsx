@@ -144,12 +144,12 @@ export default function Footer() {
           <div className="flex flex-wrap items-center md:justify-between justify-center">
             <div className="w-full md:w-4/12 px-4 mx-auto text-center">
               <div className="text-sm text-slate-500 font-semibold py-1">
-                Copyright © {new Date().getFullYear()} Notus NextJS by{" "}
+                Copyright © {new Date().getFullYear()} Attendance by{" "}
                 <a
                   href="https://www.creative-tim.com?ref=nnjs-footer"
                   className="text-slate-500 hover:text-slate-800"
                 >
-                  Creative Tim
+                  lnanhkhoa
                 </a>
                 .
               </div>
