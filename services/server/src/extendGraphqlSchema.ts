@@ -7,7 +7,6 @@ import _ from "lodash";
 import path from "path";
 import handleError from "./utils/handleError";
 import moment from "moment";
-import { faker } from "@faker-js/faker";
 
 const baseFolder = path.join(process.cwd(), "src");
 
@@ -46,8 +45,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) => {
               data: {
                 school: { connect: { id: school.id } },
                 type: type,
-                temperature: faker.number.float({ min: 20, max: 35, precision: 0.1 }),
-                capturePhotoUrl: faker.image.urlPicsumPhotos(),
+                temperature: 30,
                 createdAt: moment(date).set("hours", 7).toISOString(),
                 user: { connect: { id: userId } },
               },
@@ -57,8 +55,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) => {
               where: { id: attendance.id },
               data: {
                 type: type,
-                temperature: faker.number.float({ min: 20, max: 35, precision: 0.1 }),
-                capturePhotoUrl: faker.image.urlPicsumPhotos(),
+                temperature: 30,
                 createdAt: moment(date).set("hours", 7).toISOString(),
               },
             });
