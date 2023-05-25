@@ -28,7 +28,7 @@ services:
       DATABASE_URL: ${DATABASE_URL}
     ports:
       - ${SERVER_PORT}:4000
-    command: /bin/sh -c "pnpm nx run server:start"
+    command: /bin/sh -c "pnpm nx run server:start --with-migrations"
 
   dashboard:
     image: dashboard:latest
@@ -41,7 +41,7 @@ services:
       NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL}
     ports:
       - ${DASHBOARD_PORT}:4001
-    command: /bin/sh -c "pnpm nx run dashboard:start --with-migrations"
+    command: /bin/sh -c "pnpm nx run dashboard:start"
 
   seed:
     image: seed:latest
