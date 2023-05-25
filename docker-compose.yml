@@ -29,9 +29,6 @@ services:
     ports:
       - ${SERVER_PORT}:3000
     command: /bin/sh -c "pnpm nx run server:start"
-    volumes:
-      - main_modules:/app/node_modules
-      - ./services/server:/app/services/server
 
   dashboard:
     image: dashboard:latest
@@ -63,6 +60,3 @@ services:
 networks:
   default:
     name: attendance-system
-
-volumes:
-  main_modules: {}
