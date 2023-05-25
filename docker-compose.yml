@@ -55,7 +55,7 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       TOTAL_SCHOOLS: ${TOTAL_SCHOOLS}
       TOTAL_STUDENTS_PER_SCHOOL: ${TOTAL_STUDENTS_PER_SCHOOL}
-    command: /bin/sh -c "pnpm nx run dashboard:start"
+    command: /bin/sh -c "pnpm nx run seed:start"
 
 networks:
   default:
