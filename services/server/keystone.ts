@@ -22,7 +22,7 @@ export default withAuth(
         path: "/status",
         data: { status: "healthy" },
       },
-      cors: { origin: "*", credentials: true },
+      cors: true,
     },
     graphql: {
       apolloConfig: {
