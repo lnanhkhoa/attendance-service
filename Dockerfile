@@ -41,6 +41,7 @@ COPY services/dashboard services/dashboard
 
 RUN pnpm install
 ENV NEXT_TELEMETRY_DISABLED 1
+COPY .env.docker .env
 RUN pnpm nx run dashboard:build
 
 
