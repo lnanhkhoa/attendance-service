@@ -37,7 +37,7 @@ async function main() {
       const users = await prisma.user.findMany({ where: { school: { equals: school.id } } });
 
       // sample attendances
-      for (let indexDate = 0; indexDate < 60; indexDate++) {
+      for (let indexDate = 0; indexDate < 30; indexDate++) {
         await prisma.attendance.createMany({
           data: generateAttendances(
             school.id,
@@ -46,7 +46,7 @@ async function main() {
               { min: Math.floor(users.length / 2), max: users.length },
             ),
             "checkin",
-            moment().subtract(8, "days").add(indexDate, "day").startOf("days").toISOString(),
+            moment().subtract(30, "days").add(indexDate, "day").startOf("days").toISOString(),
           ),
           skipDuplicates: true,
         });
